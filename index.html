@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Firewall | Browser Isolation Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-icon">⬡</div><div><strong>AI FIREWALL</strong><span>ISOLATED BROWSER LAB</span></div></div>
+    <div class="top-status"><span class="pulse"></span><span id="sandboxStatus">SANDBOX STARTING</span><span class="divider"></span><span id="clock">--:--:--</span></div>
+  </header>
+  <main class="page">
+    <section class="hero"><div><p class="eyebrow">SECURITY OPERATIONS / LAB 01</p><h1>Browser isolation <span>&amp; packet telemetry</span></h1><p class="sub">Inspect website activity inside a separate browser container while observing network packet metadata in real time.</p></div><div class="live-badge"><span class="pulse"></span> LIVE MONITORING</div></section>
+    <section class="urlbar panel"><div class="url-symbol">↗</div><form id="navigateForm"><label class="sr-only" for="urlInput">Website URL</label><input id="urlInput" type="url" placeholder="https://example.com" value="https://example.com" required maxlength="2048"><button id="openBtn" type="submit">OPEN IN SANDBOX <span>→</span></button></form><button id="vtBtn" class="secondary-btn">CHECK VIRUSTOTAL</button></section>
+    <div id="notice" class="notice hidden" role="status"></div>
+    <section class="main-grid">
+      <article class="panel browser-panel">
+        <div class="panel-heading"><div><span class="section-index">01</span><h2>Isolated browser</h2></div><div class="panel-tools"><span id="browserBadge" class="badge neutral">IDLE</span><button class="icon-btn" data-action="back" title="Back">←</button><button class="icon-btn" data-action="forward" title="Forward">→</button><button class="icon-btn" data-action="reload" title="Reload">⟳</button></div></div>
+        <div class="browser-address"><span class="lock">▣</span><span id="currentUrl">Waiting for navigation</span><span class="external-mark">ISOLATED</span></div>
+        <div class="preview-wrap"><div id="previewPlaceholder" class="preview-placeholder"><div class="placeholder-icon">▣</div><strong>Browser preview</strong><p>Open a public website to begin a monitored session.</p></div><img id="preview" alt="Screenshot of the isolated browser website" class="preview hidden"></div>
+        <div class="browser-footer"><span><i class="dot green"></i> Separate browser container</span><span id="pageTitle">No page loaded</span></div>
+      </article>
+      <article class="panel packet-panel">
+        <div class="panel-heading"><div><span class="section-index">02</span><h2>Network packet monitor</h2></div><span class="badge live"><span class="pulse"></span> CAPTURING</span></div>
+        <div class="capture-meta"><span><i class="dot green"></i> TShark capture</span><span id="packetCountLabel">0 packets shown</span></div>
+        <div class="table-wrap"><table><thead><tr><th>TIME</th><th>SOURCE → DESTINATION</th><th>PROTOCOL</th><th>BYTES</th><th>STATE</th></tr></thead><tbody id="packetRows"><tr class="empty-row"><td colspan="5">Waiting for captured traffic…</td></tr></tbody></table></div>
+        <div class="packet-footer"><span><i class="dot green"></i> Observed packets</span><span>Metadata only · payloads not stored</span></div>
+      </article>
+    </section>
+    <section class="metrics-grid">
+      <article class="metric panel"><div class="metric-top"><span>PACKETS CAPTURED</span><span class="metric-icon">⌁</span></div><div class="metric-value" id="totalPackets">0</div><div class="metric-note">Latest capture buffer</div></article>
+      <article class="metric panel"><div class="metric-top"><span>PROTOCOLS SEEN</span><span class="metric-icon">⇄</span></div><div class="metric-value" id="protocolCount">0</div><div class="metric-note">Unique observed protocols</div></article>
+      <article class="metric panel"><div class="metric-top"><span>SECURITY ALERTS</span><span class="metric-icon warn">⚠</span></div><div class="metric-value" id="alertCount">0</div><div class="metric-note">Heuristic flags · review required</div></article>
+      <article class="metric panel"><div class="metric-top"><span>SESSION ERRORS</span><span class="metric-icon">⌁</span></div><div class="metric-value" id="errorCount">0</div><div class="metric-note">Navigation / worker errors</div></article>
+    </section>
+    <section class="lower-grid">
+      <article class="panel"><div class="panel-heading"><div><span class="section-index">03</span><h2>Threat intelligence</h2></div><span class="badge neutral" id="vtBadge">NOT CHECKED</span></div><div id="vtResult" class="analysis-content"><div class="empty-state"><div class="large-icon">⌕</div><strong>VirusTotal URL lookup</strong><p>Check for an existing URL report. The dashboard does not automatically submit URLs for scanning.</p><button class="outline-btn" id="vtBtn2">LOOK UP URL</button></div></div></article>
+      <article class="panel"><div class="panel-heading"><div><span class="section-index">04</span><h2>Session events</h2></div><button id="clearEvents" class="text-btn">CLEAR</button></div><div id="events" class="events"><div class="event"><span class="event-dot"></span><div><strong>Dashboard initialized</strong><p>Waiting for browser and capture worker status.</p></div><time>NOW</time></div></div></article>
+    </section>
+    <footer><span>AI FIREWALL MONITORING DASHBOARD</span><span>Use only with systems you are authorized to test · Network metadata may not identify malicious intent.</span></footer>
+  </main>
+  <script src="/app.js"></script>
+</body></html>
