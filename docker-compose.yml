@@ -1,0 +1,34 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      PORT: 3000
+      BROWSER_WORKER_URL: http://browser-worker:4000
+      VIRUSTOTAL_API_KEY: ${VIRUSTOTAL_API_KEY:-}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-replace-with-a-long-random-secret}
+    depends_on:
+      browser-worker:
+        condition: service_started
+    networks: [firewall-lab]
+    restart: unless-stopped
+
+  browser-worker:
+    build: ./browser-worker
+    environment:
+      PORT: 4000
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-replace-with-a-long-random-secret}
+    # Do not publish this port to the host. The app reaches it on the private Docker network.
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    networks: [firewall-lab]
+    shm_size: 1gb
+    restart: unless-stopped
+
+networks:
+  firewall-lab:
+    driver: bridge
